@@ -84,7 +84,10 @@ int main(int argc, char *argv[]) {
     const auto build_version_release_or_codename = config.find("BUILD_VERSION_RELEASE_OR_CODENAME");
     const auto debuggable = config.find("DEBUGGABLE");
     const auto manufacturer_name = config.find("MANUFACTURER_NAME");
+    const auto brand_name = config.find("BRAND_NAME");
+    const auto device_name = config.find("DEVICE_NAME");
     const auto product_name = config.find("PRODUCT_NAME");
+    const auto model_name = config.find("MODEL_NAME");
 
     if (is_init_stage && build_fingerprint != config.end()) {
         property_override(property_list("ro.", "build.fingerprint"),
@@ -127,8 +130,20 @@ int main(int argc, char *argv[]) {
                 manufacturer_name->second.c_str());
     }
 
+    if (is_boot_completed_stage && brand_name != config.end()) {
+        property_override(property_list("ro.product.", "brand"), brand_name->second.c_str());
+    }
+
+    if (is_boot_completed_stage && device_name != config.end()) {
+        property_override(property_list("ro.product.", "device"), device_name->second.c_str());
+    }
+
     if (is_init_stage && product_name != config.end()) {
         property_override(property_list("ro.product.", "name"), product_name->second.c_str());
+    }
+
+    if (is_boot_completed_stage && model_name != config.end()) {
+        property_override(property_list("ro.product.", "model"), model_name->second.c_str());
     }
 
     if (is_boot_completed_stage) {
